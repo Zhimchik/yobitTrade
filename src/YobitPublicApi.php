@@ -171,11 +171,11 @@ class YobitPublicApi
      *
      * @throws ApiDisabledException|ApiDDosException
      */
-    public function getDepths($pairs)
+    public function getDepths(string $pairs)
     {
-        $query = $this->prepareQueryForPairs($pairs);
+        //$query = $this->prepareQueryForPairs($pairs);
 
-        return $this->sendResponse('depth/' . $query);
+        return $this->sendResponse('depth/' . $pairs);
     }
 
     /**
@@ -194,11 +194,11 @@ class YobitPublicApi
      *
      * @throws ApiDisabledException|ApiDDosException
      */
-    public function getTrades(array $pairs)
+    public function getTrades(string $pairs)
     {
-        $query = $this->prepareQueryForPairs($pairs);
+        //$query = $this->prepareQueryForPairs($pairs);
 
-        return $this->sendResponse('trades/' . $query);
+        return $this->sendResponse('trades/' . $pairs);
     }
 
     /**
@@ -299,7 +299,7 @@ class YobitPublicApi
         ob_flush();
         flush();
         ob_start();
-        //sleep(2);
+        sleep(2);
     }
 
 }
