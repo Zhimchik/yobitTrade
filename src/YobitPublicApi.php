@@ -267,16 +267,18 @@ class YobitPublicApi
         foreach ($getTradesByPair as $key) {
             foreach ($key as $value) {
                 if ($value['timestamp'] > (date_timestamp_get($date) - 3600)) {
-                    $countTrades[] = $value->timestamp;
+
+                    if($value['type'] == 'bid'){
+                        $countTrades[]=$value['type'];
+                    }
+                    else {
+                        return $countTrades;
+                    }
                 }
             }
         }
-        if (count($countTrades) > 10) {
+        return false;
 
-            return $countTrades;
-        } else {
-            return false;
-        }
     }
 
     function getBuyOrdersByPair($getTradesByPair)
@@ -285,16 +287,11 @@ class YobitPublicApi
         foreach ($getTradesByPair as $key) {
 
             $countBuyOrders = $key['asks'];
+
         }
 
-        if (count($countBuyOrders) > 15) {
+        return $countBuyOrders;
 
-            return $countBuyOrders;
-
-        } else {
-
-           return false;
-        }
     }
 
     function flush_buffers(){
@@ -302,7 +299,7 @@ class YobitPublicApi
         ob_flush();
         flush();
         ob_start();
-        sleep(2);
+        //sleep(2);
     }
 
 }

@@ -16,19 +16,23 @@ foreach ($getNamePairs as $nameParir){
 
 $getOrdersByPair = $publicApi->getTrade($from, $to);
 
-   if(false!=($countTrades = $publicApi->getTradesLastHourByPair($getOrdersByPair))){
+   if(count($countTrades = $publicApi->getTradesLastHourByPair($getOrdersByPair)) > 1){
 
        $getBuyOrdersByPair= $publicApi->getDepth($from, $to);
 
-       if(false!=($countBuyOrders = $publicApi->getBuyOrdersByPair($getBuyOrdersByPair))){
-           echo "По паре " . strtoupper($from) . "-" . strtoupper($to) ." сделок за последний час - " . count($countTrades) . "  Ордеров на покупку - " . count($countBuyOrders);
+       if(count($countBuyOrders = $publicApi->getBuyOrdersByPair($getBuyOrdersByPair)) > 1){
+           echo "По паре " . strtoupper($from) . "-" . strtoupper($to) ." Закупок подряд - " . count($countTrades) . "  Ордеров на покупку - " . count($countBuyOrders);
            echo '<br>','<br>';
            $publicApi->flush_buffers();
        }
        else{
+           $publicApi->flush_buffers();
            continue;
        }
    }
-   else continue;
+   else {
+       $publicApi->flush_buffers();
+       continue;
+   }
 
 }
