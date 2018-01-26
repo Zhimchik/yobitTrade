@@ -5,58 +5,35 @@ ini_set('memory_limit', '-1');
 
 require './vendor/autoload.php';
 use OlegStyle\YobitApi\YobitPublicApi;
+use OlegStyle\YobitApi\YobitCoin;
 
 $publicApi = new YobitPublicApi();
+$yobitCoin = new YobitCoin();
 
-
-//$getNamePairs = array_keys($publicApi->getPairsBTC($publicApi->getPairs($publicApi->getInfo())));
-
-//foreach ($getNamePairs as $nameParir) {
-//    list($from, $to) = explode('_', $nameParir);
-//}
 
 $responseJson_str = file_get_contents('coin.json');
 $response = json_decode($responseJson_str, true);
 
-$from= '';
-$to = '';
-//$newPair=[];
+$getNamesPairs = array_keys($publicApi->getPairsBTC($publicApi->getPairs($response)));
+$getArrayNames = array_chunk($getNamesPairs, 49);
 
-
-$getNamePairs = array_keys($publicApi->getPairsBTC($publicApi->getPairs($response)));
-//$output = array_slice($getNamePairs, 0, 49);
-$output = array_chunk($getNamePairs, 49);
-
-foreach ($output as $item){
-
-    $getNewNamePairs = implode('-', $item);
+foreach ($getArrayNames as $item){
+    $getStringNamePairs = implode('-', $item);
     //последние сделки
-    $getRecentDeals = $publicApi->getTrades($getNewNamePairs);
-    //активные ордера
-    $publicApi->getDepths($getNewNamePairs);
+    $getTradesDeals = $publicApi->getTrades($getStringNamePairs);
+    //получить активные ордера
+    $getActiveOrders = $publicApi->getDepths($getStringNamePairs);
 
-    var_dump(1);
+    //получить активные коины
+    $getActiveCoin = $yobitCoin->getActiveCoin($getTradesDeals);
+
+    //получить коины которыми закупаются
+    $getPumpCoin = $yobitCoin->getPumpCoin($getTradesDeals);
+
+    $echoPumpCoin = $yobitCoin->echoPumpCoin($getPumpCoin);
+
     $publicApi->flush_buffers();
-
 }
 
-
-
-die();
-
-
-//var_dump($getNamePairs); die();
-//foreach ($getNamePairs as $nameParir) {
-    //list($from, $to) = explode('_', $nameParir);
-
-
-
-    $countTrades = $publicApi->getTradesLastHourByPair($getOrdersByPair);
-
-    $countBuyOrders = $publicApi->getBuyOrdersByPair($getBuyOrdersByPair);
-    echo "По паре " . strtoupper($from) . "-" . strtoupper($to) . " Закупок подряд - " . count($countTrades) . "  Ордеров на покупку - " . count($countBuyOrders);
-    echo '<br>', '<br>';
-    $publicApi->flush_buffers();
-//}
 
 

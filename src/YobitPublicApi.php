@@ -20,7 +20,7 @@ use Psr\Http\Message\ResponseInterface;
 class YobitPublicApi
 {
     const BASE_URI = 'https://yobit.net/api/3/';
-    
+
     /**
      * @var Client
      */
@@ -67,9 +67,9 @@ class YobitPublicApi
         }
 
         $result = shell_exec(
-            'phantomjs '.
+            'phantomjs ' .
             __DIR__ . '/cloudflare-challenge.js ' .
-            ((string) $this->client->getConfig('base_uri')) . $url
+            ((string)$this->client->getConfig('base_uri')) . $url
         );
 
         if ($result === null) {
@@ -127,7 +127,7 @@ class YobitPublicApi
             throw new ApiDisabledException();
         }
 
-        $responseBody = (string) $response->getBody();
+        $responseBody = (string)$response->getBody();
 
         if ($response->getStatusCode() === 503) { // cloudflare ddos protection
             throw new ApiDDosException($responseBody);
@@ -234,11 +234,15 @@ class YobitPublicApi
         return $this->getTickers([new CurrencyPair($from, $to)]);
     }
 
-    function getPairsBTC($pairs)
+    /**
+     * @param array $pairs
+     * @return array pair BTC
+     */
+    public function getPairsBTC($pairs)
     {
 
         $pairsBtc = [];
-        $btc = '/(btc)/';
+        $btc = '/(usd)/';
         foreach ($pairs as $key => $value) {
             if (preg_match($btc, $key, $pairBtc)) {
                 $pairsBtc[$key] = $value;
@@ -248,7 +252,11 @@ class YobitPublicApi
         return $pairsBtc;
     }
 
-    function getPairs($response)
+    /**
+     * @param $response
+     * @return array All pairs
+     */
+    public function getPairs($response)
     {
         $pairs = [];
 
@@ -260,46 +268,58 @@ class YobitPublicApi
 
     }
 
-    function getTradesLastHourByPair($getTradesByPair)
+    /**
+     * clean buffer
+     */
+    public function flush_buffers()
     {
-        $date = date_create();
-        $countTrades = [];
-        foreach ($getTradesByPair as $key) {
-            foreach ($key as $value) {
-                if ($value['timestamp'] > (date_timestamp_get($date) - 3600)) {
-
-                    if($value['type'] == 'bid'){
-                        $countTrades[]=$value['type'];
-                    }
-                    else {
-                        return $countTrades;
-                    }
-                }
-            }
-        }
-        return false;
-
-    }
-
-    function getBuyOrdersByPair($getTradesByPair)
-    {
-        $countBuyOrders = [];
-        foreach ($getTradesByPair as $key) {
-
-            $countBuyOrders = $key['asks'];
-
-        }
-
-        return $countBuyOrders;
-
-    }
-
-    function flush_buffers(){
         ob_end_flush();
         ob_flush();
         flush();
         ob_start();
         sleep(2);
     }
-
 }
+
+
+//    function getTradesByPair($getTradesByPair)
+//    {
+//        $coinTrades = [];
+//        foreach ($getTradesByPair as $key => $value) {
+//            $coinTrades[$key] = $value;
+//        }
+//
+//        return $coinTrades;
+//    }
+//
+//    function getAllDealsByCoin($coinTrades)
+//    {
+//        $allDeals=[];
+//        foreach ($coinTrades as $value => $key) {
+//            foreach ($key as $item){
+//                if ($item['type'] == 'bid'){
+//                    $allDeals[$value]['buy'][] =  $item;
+//                }
+//                else if($item['type'] == 'ask'){
+//                    $allDeals[$value]['sale'][] =  $item;
+//                }
+//                else {
+//                    continue;
+//                }
+//            }
+//        }
+//
+//        return $allDeals;
+//    }
+//            foreach ($key as $value) {
+//                if ($value['timestamp'] > (date_timestamp_get($date) - 3600)) {
+//
+//                    if($value['type'] == 'bid'){
+//                        $countTrades[]=$value['type'];
+//                    }
+//                    else {
+//                        return $countTrades;
+//                    }
+//                }
+//            }
+//        }
