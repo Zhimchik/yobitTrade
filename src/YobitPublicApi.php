@@ -175,7 +175,7 @@ class YobitPublicApi
     {
         //$query = $this->prepareQueryForPairs($pairs);
 
-        return $this->sendResponse('depth/' . $pairs);
+        return $this->sendResponse('depth/' . $pairs . '?limit=2000');
     }
 
     /**
@@ -242,7 +242,7 @@ class YobitPublicApi
     {
 
         $pairsBtc = [];
-        $btc = '/(usd)/';
+        $btc = '/(btc)/';
         foreach ($pairs as $key => $value) {
             if (preg_match($btc, $key, $pairBtc)) {
                 $pairsBtc[$key] = $value;
@@ -280,46 +280,3 @@ class YobitPublicApi
         sleep(2);
     }
 }
-
-
-//    function getTradesByPair($getTradesByPair)
-//    {
-//        $coinTrades = [];
-//        foreach ($getTradesByPair as $key => $value) {
-//            $coinTrades[$key] = $value;
-//        }
-//
-//        return $coinTrades;
-//    }
-//
-//    function getAllDealsByCoin($coinTrades)
-//    {
-//        $allDeals=[];
-//        foreach ($coinTrades as $value => $key) {
-//            foreach ($key as $item){
-//                if ($item['type'] == 'bid'){
-//                    $allDeals[$value]['buy'][] =  $item;
-//                }
-//                else if($item['type'] == 'ask'){
-//                    $allDeals[$value]['sale'][] =  $item;
-//                }
-//                else {
-//                    continue;
-//                }
-//            }
-//        }
-//
-//        return $allDeals;
-//    }
-//            foreach ($key as $value) {
-//                if ($value['timestamp'] > (date_timestamp_get($date) - 3600)) {
-//
-//                    if($value['type'] == 'bid'){
-//                        $countTrades[]=$value['type'];
-//                    }
-//                    else {
-//                        return $countTrades;
-//                    }
-//                }
-//            }
-//        }

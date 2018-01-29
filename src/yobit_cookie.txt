@@ -1,0 +1,1 @@
+[{"Name":"__cfduid","Value":"dc84b22e649cb4703a7e3a21f1a3a34e81517223026","Domain":".yobit.net","Path":"\/","Max-Age":null,"Expires":1548759026,"Secure":true,"Discard":false,"HttpOnly":false,"Expiry":1548759026,"Httponly":true},{"Name":"locale","Value":"en","Domain":"yobit.net","Path":"\/","Max-Age":null,"Expires":1832756588,"Secure":false,"Discard":false,"HttpOnly":false}]

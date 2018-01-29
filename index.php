@@ -23,14 +23,14 @@ foreach ($getArrayNames as $item){
     $getTradesDeals = $publicApi->getTrades($getStringNamePairs);
     //получить активные ордера
     $getActiveOrders = $publicApi->getDepths($getStringNamePairs);
-
     //получить активные коины
     $getActiveCoin = $yobitCoin->getActiveCoin($getTradesDeals);
-
     //получить коины которыми закупаются
-    $getPumpCoin = $yobitCoin->getPumpCoin($getTradesDeals);
-
-    $echoPumpCoin = $yobitCoin->echoPumpCoin($getPumpCoin);
+    $getPumpCoin = $yobitCoin->getPumpCoin($getActiveCoin);
+    //получить активные ордера по коинам которые пампят
+    $getActiveOrdersByPump = $yobitCoin->getActiveOrdersByPump($getPumpCoin);
+    //Вывести информацию на экран
+    $echoPumpCoin = $yobitCoin->echoPumpCoin($getPumpCoin , $getActiveOrdersByPump);
 
     $publicApi->flush_buffers();
 }
